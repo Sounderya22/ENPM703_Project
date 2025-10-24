@@ -1,0 +1,373 @@
+<mujoco model="Humanoid Pyramid Touching Shoulders">
+  <option timestep="0.005"/>
+  <compiler autolimits="true"/>
+  
+  <visual>
+    <map force="0.1" zfar="30"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global offwidth="2560" offheight="1440"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1=".3 .5 .7" rgb2="0 0 0" width="32" height="512"/>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".1 .2 .3" rgb2=".2 .3 .4"/>
+    <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2"/>
+    <material name="red" rgba="0.8 0.3 0.3 1"/>
+    <material name="green" rgba="0.3 0.8 0.3 1"/>
+    <material name="blue" rgba="0.3 0.3 0.8 1"/>
+  </asset>
+
+  <worldbody>
+    <!-- Ground -->
+    <geom name="ground" type="plane" size="50 50 0.1" material="grid" condim="3"/>
+    
+    <light directional="true" diffuse="0.6 0.6 0.6" specular="0.3 0.3 0.3" pos="0 0 4" dir="0 0 -1"/>
+    <light name="spotlight" pos="0 -4 3" dir="0 0.5 -1" diffuse=".8 .8 .8" directional="true"/>
+    
+    <!-- Bottom humanoid 1 (Red) - positioned so shoulders touch -->
+    <body name="bot1" pos="0 -0.25 1">
+      <freejoint name="bot1_root"/>
+      <body name="bot1_torso" pos="0 0 0.282">
+        <geom name="bot1_torso" fromto="0 -.07 0 0 .07 0" size=".07" type="capsule" material="red"/>
+        <geom name="bot1_waist_upper" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" type="capsule" material="red"/>
+        
+        <!-- Head -->
+        <body name="bot1_head" pos="0 0 .19">
+          <geom name="bot1_head" type="sphere" size=".09" material="red"/>
+        </body>
+        
+        <!-- Right Arm -->
+        <body name="bot1_upper_arm_right" pos="0 -.17 .06">
+          <joint name="bot1_shoulder1_right" type="hinge" axis="2 1 1" range="-85 60"/>
+          <joint name="bot1_shoulder2_right" type="hinge" axis="0 -1 1" range="-85 60"/>
+          <geom name="bot1_upper_arm_right" fromto="0 0 0 .16 -.16 -.16" size=".04" type="capsule" material="red"/>
+          <body name="bot1_lower_arm_right" pos=".18 -.18 -.18">
+            <joint name="bot1_elbow_right" type="hinge" axis="0 -1 1" range="-100 50"/>
+            <geom name="bot1_lower_arm_right" fromto=".01 .01 .01 .17 .17 .17" size=".031" type="capsule" material="red"/>
+            <body name="bot1_hand_right" pos=".18 .18 .18">
+              <geom name="bot1_hand_right" type="sphere" size=".04" material="red"/>
+            </body>
+          </body>
+        </body>
+        
+        <!-- Left Arm -->
+        <body name="bot1_upper_arm_left" pos="0 .17 .06">
+          <joint name="bot1_shoulder1_left" type="hinge" axis="-2 1 -1" range="-85 60"/>
+          <joint name="bot1_shoulder2_left" type="hinge" axis="0 -1 -1" range="-85 60"/>
+          <geom name="bot1_upper_arm_left" fromto="0 0 0 .16 .16 -.16" size=".04" type="capsule" material="red"/>
+          <body name="bot1_lower_arm_left" pos=".18 .18 -.18">
+            <joint name="bot1_elbow_left" type="hinge" axis="0 -1 -1" range="-100 50"/>
+            <geom name="bot1_lower_arm_left" fromto=".01 -.01 .01 .17 -.17 .17" size=".031" type="capsule" material="red"/>
+            <body name="bot1_hand_left" pos=".18 -.18 .18">
+              <geom name="bot1_hand_left" type="sphere" size=".04" material="red"/>
+            </body>
+          </body>
+        </body>
+        
+        <!-- Lower Body -->
+        <body name="bot1_waist_lower" pos="-.01 0 -.26">
+          <geom name="bot1_waist_lower" fromto="0 -.06 0 0 .06 0" size=".06" type="capsule" material="red"/>
+          <joint name="bot1_abdomen_z" pos="0 0 .065" axis="0 0 1" range="-45 45"/>
+          <joint name="bot1_abdomen_y" pos="0 0 .065" axis="0 1 0" range="-75 30"/>
+          <body name="bot1_pelvis" pos="0 0 -.165">
+            <joint name="bot1_abdomen_x" pos="0 0 .1" axis="1 0 0" range="-35 35"/>
+            <geom name="bot1_butt" fromto="-.02 -.07 0 -.02 .07 0" size=".09" type="capsule" material="red"/>
+            
+            <!-- Right Leg -->
+            <body name="bot1_thigh_right" pos="0 -.1 -.04">
+              <joint name="bot1_hip_x_right" type="hinge" axis="1 0 0" range="-30 10"/>
+              <joint name="bot1_hip_z_right" type="hinge" axis="0 0 1" range="-60 35"/>
+              <joint name="bot1_hip_y_right" type="hinge" axis="0 1 0" range="-150 20"/>
+              <geom name="bot1_thigh_right" fromto="0 0 0 0 .01 -.34" size=".06" type="capsule" material="red"/>
+              <body name="bot1_shin_right" pos="0 .01 -.4">
+                <joint name="bot1_knee_right" type="hinge" axis="0 -1 0" range="-160 2"/>
+                <geom name="bot1_shin_right" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="red"/>
+                <body name="bot1_foot_right" pos="0 0 -.39">
+                  <joint name="bot1_ankle_y_right" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
+                  <joint name="bot1_ankle_x_right" type="hinge" pos="0 0 .04" axis="1 0 .5" range="-50 50"/>
+                  <geom name="bot1_foot1_right" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="red"/>
+                  <geom name="bot1_foot2_right" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="red"/>
+                </body>
+              </body>
+            </body>
+            
+            <!-- Left Leg -->
+            <body name="bot1_thigh_left" pos="0 .1 -.04">
+              <joint name="bot1_hip_x_left" type="hinge" axis="-1 0 0" range="-30 10"/>
+              <joint name="bot1_hip_z_left" type="hinge" axis="0 0 -1" range="-60 35"/>
+              <joint name="bot1_hip_y_left" type="hinge" axis="0 1 0" range="-150 20"/>
+              <geom name="bot1_thigh_left" fromto="0 0 0 0 -.01 -.34" size=".06" type="capsule" material="red"/>
+              <body name="bot1_shin_left" pos="0 -.01 -.4">
+                <joint name="bot1_knee_left" type="hinge" axis="0 -1 0" range="-160 2"/>
+                <geom name="bot1_shin_left" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="red"/>
+                <body name="bot1_foot_left" pos="0 0 -.39">
+                  <joint name="bot1_ankle_y_left" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
+                  <joint name="bot1_ankle_x_left" type="hinge" pos="0 0 .04" axis="-1 0 -.5" range="-50 50"/>
+                  <geom name="bot1_foot1_left" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="red"/>
+                  <geom name="bot1_foot2_left" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="red"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <!-- Bottom humanoid 2 (Green) - positioned so shoulders touch -->
+    <body name="bot2" pos="0 0.25 1">
+      <freejoint name="bot2_root"/>
+      <body name="bot2_torso" pos="0 0 0.282">
+        <geom name="bot2_torso" fromto="0 -.07 0 0 .07 0" size=".07" type="capsule" material="green"/>
+        <geom name="bot2_waist_upper" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" type="capsule" material="green"/>
+        
+        <!-- Head -->
+        <body name="bot2_head" pos="0 0 .19">
+          <geom name="bot2_head" type="sphere" size=".09" material="green"/>
+        </body>
+        
+        <!-- Right Arm -->
+        <body name="bot2_upper_arm_right" pos="0 -.17 .06">
+          <joint name="bot2_shoulder1_right" type="hinge" axis="2 1 1" range="-85 60"/>
+          <joint name="bot2_shoulder2_right" type="hinge" axis="0 -1 1" range="-85 60"/>
+          <geom name="bot2_upper_arm_right" fromto="0 0 0 .16 -.16 -.16" size=".04" type="capsule" material="green"/>
+          <body name="bot2_lower_arm_right" pos=".18 -.18 -.18">
+            <joint name="bot2_elbow_right" type="hinge" axis="0 -1 1" range="-100 50"/>
+            <geom name="bot2_lower_arm_right" fromto=".01 .01 .01 .17 .17 .17" size=".031" type="capsule" material="green"/>
+            <body name="bot2_hand_right" pos=".18 .18 .18">
+              <geom name="bot2_hand_right" type="sphere" size=".04" material="green"/>
+            </body>
+          </body>
+        </body>
+        
+        <!-- Left Arm -->
+        <body name="bot2_upper_arm_left" pos="0 .17 .06">
+          <joint name="bot2_shoulder1_left" type="hinge" axis="-2 1 -1" range="-85 60"/>
+          <joint name="bot2_shoulder2_left" type="hinge" axis="0 -1 -1" range="-85 60"/>
+          <geom name="bot2_upper_arm_left" fromto="0 0 0 .16 .16 -.16" size=".04" type="capsule" material="green"/>
+          <body name="bot2_lower_arm_left" pos=".18 .18 -.18">
+            <joint name="bot2_elbow_left" type="hinge" axis="0 -1 -1" range="-100 50"/>
+            <geom name="bot2_lower_arm_left" fromto=".01 -.01 .01 .17 -.17 .17" size=".031" type="capsule" material="green"/>
+            <body name="bot2_hand_left" pos=".18 -.18 .18">
+              <geom name="bot2_hand_left" type="sphere" size=".04" material="green"/>
+            </body>
+          </body>
+        </body>
+        
+        <!-- Lower Body -->
+        <body name="bot2_waist_lower" pos="-.01 0 -.26">
+          <geom name="bot2_waist_lower" fromto="0 -.06 0 0 .06 0" size=".06" type="capsule" material="green"/>
+          <joint name="bot2_abdomen_z" pos="0 0 .065" axis="0 0 1" range="-45 45"/>
+          <joint name="bot2_abdomen_y" pos="0 0 .065" axis="0 1 0" range="-75 30"/>
+          <body name="bot2_pelvis" pos="0 0 -.165">
+            <joint name="bot2_abdomen_x" pos="0 0 .1" axis="1 0 0" range="-35 35"/>
+            <geom name="bot2_butt" fromto="-.02 -.07 0 -.02 .07 0" size=".09" type="capsule" material="green"/>
+            
+            <!-- Right Leg -->
+            <body name="bot2_thigh_right" pos="0 -.1 -.04">
+              <joint name="bot2_hip_x_right" type="hinge" axis="1 0 0" range="-30 10"/>
+              <joint name="bot2_hip_z_right" type="hinge" axis="0 0 1" range="-60 35"/>
+              <joint name="bot2_hip_y_right" type="hinge" axis="0 1 0" range="-150 20"/>
+              <geom name="bot2_thigh_right" fromto="0 0 0 0 .01 -.34" size=".06" type="capsule" material="green"/>
+              <body name="bot2_shin_right" pos="0 .01 -.4">
+                <joint name="bot2_knee_right" type="hinge" axis="0 -1 0" range="-160 2"/>
+                <geom name="bot2_shin_right" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="green"/>
+                <body name="bot2_foot_right" pos="0 0 -.39">
+                  <joint name="bot2_ankle_y_right" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
+                  <joint name="bot2_ankle_x_right" type="hinge" pos="0 0 .04" axis="1 0 .5" range="-50 50"/>
+                  <geom name="bot2_foot1_right" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="green"/>
+                  <geom name="bot2_foot2_right" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="green"/>
+                </body>
+              </body>
+            </body>
+            
+            <!-- Left Leg -->
+            <body name="bot2_thigh_left" pos="0 .1 -.04">
+              <joint name="bot2_hip_x_left" type="hinge" axis="-1 0 0" range="-30 10"/>
+              <joint name="bot2_hip_z_left" type="hinge" axis="0 0 -1" range="-60 35"/>
+              <joint name="bot2_hip_y_left" type="hinge" axis="0 1 0" range="-150 20"/>
+              <geom name="bot2_thigh_left" fromto="0 0 0 0 -.01 -.34" size=".06" type="capsule" material="green"/>
+              <body name="bot2_shin_left" pos="0 -.01 -.4">
+                <joint name="bot2_knee_left" type="hinge" axis="0 -1 0" range="-160 2"/>
+                <geom name="bot2_shin_left" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="green"/>
+                <body name="bot2_foot_left" pos="0 0 -.39">
+                  <joint name="bot2_ankle_y_left" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
+                  <joint name="bot2_ankle_x_left" type="hinge" pos="0 0 .04" axis="-1 0 -.5" range="-50 50"/>
+                  <geom name="bot2_foot1_left" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="green"/>
+                  <geom name="bot2_foot2_left" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="green"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <!-- Top humanoid (Blue) - positioned centered above both base robots -->
+    <body name="top" pos="0 0 2.4">
+      <freejoint name="top_root"/>
+      <body name="top_torso" pos="0 0 0.282">
+        <geom name="top_torso" fromto="0 -.07 0 0 .07 0" size=".07" type="capsule" material="blue"/>
+        <geom name="top_waist_upper" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" type="capsule" material="blue"/>
+        
+        <!-- Head -->
+        <body name="top_head" pos="0 0 .19">
+          <geom name="top_head" type="sphere" size=".09" material="blue"/>
+        </body>
+        
+        <!-- Arms -->
+        <body name="top_upper_arm_right" pos="0 -.17 .06">
+          <joint name="top_shoulder1_right" type="hinge" axis="2 1 1" range="-85 60"/>
+          <joint name="top_shoulder2_right" type="hinge" axis="0 -1 1" range="-85 60"/>
+          <geom name="top_upper_arm_right" fromto="0 0 0 .16 -.16 -.16" size=".04" type="capsule" material="blue"/>
+          <body name="top_lower_arm_right" pos=".18 -.18 -.18">
+            <joint name="top_elbow_right" type="hinge" axis="0 -1 1" range="-100 50"/>
+            <geom name="top_lower_arm_right" fromto=".01 .01 .01 .17 .17 .17" size=".031" type="capsule" material="blue"/>
+            <body name="top_hand_right" pos=".18 .18 .18">
+              <geom name="top_hand_right" type="sphere" size=".04" material="blue"/>
+            </body>
+          </body>
+        </body>
+        
+        <body name="top_upper_arm_left" pos="0 .17 .06">
+          <joint name="top_shoulder1_left" type="hinge" axis="-2 1 -1" range="-85 60"/>
+          <joint name="top_shoulder2_left" type="hinge" axis="0 -1 -1" range="-85 60"/>
+          <geom name="top_upper_arm_left" fromto="0 0 0 .16 .16 -.16" size=".04" type="capsule" material="blue"/>
+          <body name="top_lower_arm_left" pos=".18 .18 -.18">
+            <joint name="top_elbow_left" type="hinge" axis="0 -1 -1" range="-100 50"/>
+            <geom name="top_lower_arm_left" fromto=".01 -.01 .01 .17 -.17 .17" size=".031" type="capsule" material="blue"/>
+            <body name="top_hand_left" pos=".18 -.18 .18">
+              <geom name="top_hand_left" type="sphere" size=".04" material="blue"/>
+            </body>
+          </body>
+        </body>
+        
+        <!-- Lower Body -->
+        <body name="top_waist_lower" pos="-.01 0 -.26">
+          <geom name="top_waist_lower" fromto="0 -.06 0 0 .06 0" size=".06" type="capsule" material="blue"/>
+          <joint name="top_abdomen_z" pos="0 0 .065" axis="0 0 1" range="-45 45"/>
+          <joint name="top_abdomen_y" pos="0 0 .065" axis="0 1 0" range="-75 30"/>
+          <body name="top_pelvis" pos="0 0 -.165">
+            <joint name="top_abdomen_x" pos="0 0 .1" axis="1 0 0" range="-35 35"/>
+            <geom name="top_butt" fromto="-.02 -.07 0 -.02 .07 0" size=".09" type="capsule" material="blue"/>
+            
+            <!-- Right Leg -->
+            <body name="top_thigh_right" pos="0 -.1 -.04">
+              <joint name="top_hip_x_right" type="hinge" axis="1 0 0" range="-30 10"/>
+              <joint name="top_hip_z_right" type="hinge" axis="0 0 1" range="-60 35"/>
+              <joint name="top_hip_y_right" type="hinge" axis="0 1 0" range="-150 20"/>
+              <geom name="top_thigh_right" fromto="0 0 0 0 .01 -.34" size=".06" type="capsule" material="blue"/>
+              <body name="top_shin_right" pos="0 .01 -.4">
+                <joint name="top_knee_right" type="hinge" axis="0 -1 0" range="-160 2"/>
+                <geom name="top_shin_right" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="blue"/>
+                <body name="top_foot_right" pos="0 0 -.39">
+                  <joint name="top_ankle_y_right" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
+                  <joint name="top_ankle_x_right" type="hinge" pos="0 0 .04" axis="1 0 .5" range="-50 50"/>
+                  <geom name="top_foot1_right" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="blue"/>
+                  <geom name="top_foot2_right" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="blue"/>
+                </body>
+              </body>
+            </body>
+            
+            <!-- Left Leg -->
+            <body name="top_thigh_left" pos="0 .1 -.04">
+              <joint name="top_hip_x_left" type="hinge" axis="-1 0 0" range="-30 10"/>
+              <joint name="top_hip_z_left" type="hinge" axis="0 0 -1" range="-60 35"/>
+              <joint name="top_hip_y_left" type="hinge" axis="0 1 0" range="-150 20"/>
+              <geom name="top_thigh_left" fromto="0 0 0 0 -.01 -.34" size=".06" type="capsule" material="blue"/>
+              <body name="top_shin_left" pos="0 -.01 -.4">
+                <joint name="top_knee_left" type="hinge" axis="0 -1 0" range="-160 2"/>
+                <geom name="top_shin_left" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="blue"/>
+                <body name="top_foot_left" pos="0 0 -.39">
+                  <joint name="top_ankle_y_left" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
+                  <joint name="top_ankle_x_left" type="hinge" pos="0 0 .04" axis="-1 0 -.5" range="-50 50"/>
+                  <geom name="top_foot1_left" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="blue"/>
+                  <geom name="top_foot2_left" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="blue"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <equality>
+    <!-- Weld top robot's feet to base robots' shoulders -->
+    <weld name="weld_top_left" body1="top_foot_left" body2="bot1_upper_arm_right"
+          anchor="0 0 0" solref="0.01 1" solimp="0.9 0.95 0.001"/>
+    <weld name="weld_top_right" body1="top_foot_right" body2="bot2_upper_arm_left"
+          anchor="0 0 0" solref="0.01 1" solimp="0.9 0.95 0.001"/>
+  </equality>
+
+  <!-- COMPLETE ACTUATORS FOR ALL JOINTS -->
+  <actuator>
+    <!-- Base Humanoid 1 (Red) Actuators -->
+    <position name="bot1_abdomen_y" joint="bot1_abdomen_y" kp="100"/>
+    <position name="bot1_abdomen_z" joint="bot1_abdomen_z" kp="100"/>
+    <position name="bot1_abdomen_x" joint="bot1_abdomen_x" kp="100"/>
+    <position name="bot1_hip_x_right" joint="bot1_hip_x_right" kp="100"/>
+    <position name="bot1_hip_z_right" joint="bot1_hip_z_right" kp="100"/>
+    <position name="bot1_hip_y_right" joint="bot1_hip_y_right" kp="100"/>
+    <position name="bot1_knee_right" joint="bot1_knee_right" kp="80"/>
+    <position name="bot1_ankle_x_right" joint="bot1_ankle_x_right" kp="50"/>
+    <position name="bot1_ankle_y_right" joint="bot1_ankle_y_right" kp="50"/>
+    <position name="bot1_hip_x_left" joint="bot1_hip_x_left" kp="100"/>
+    <position name="bot1_hip_z_left" joint="bot1_hip_z_left" kp="100"/>
+    <position name="bot1_hip_y_left" joint="bot1_hip_y_left" kp="100"/>
+    <position name="bot1_knee_left" joint="bot1_knee_left" kp="80"/>
+    <position name="bot1_ankle_x_left" joint="bot1_ankle_x_left" kp="50"/>
+    <position name="bot1_ankle_y_left" joint="bot1_ankle_y_left" kp="50"/>
+    <position name="bot1_shoulder1_right" joint="bot1_shoulder1_right" kp="50"/>
+    <position name="bot1_shoulder2_right" joint="bot1_shoulder2_right" kp="50"/>
+    <position name="bot1_elbow_right" joint="bot1_elbow_right" kp="50"/>
+    <position name="bot1_shoulder1_left" joint="bot1_shoulder1_left" kp="50"/>
+    <position name="bot1_shoulder2_left" joint="bot1_shoulder2_left" kp="50"/>
+    <position name="bot1_elbow_left" joint="bot1_elbow_left" kp="50"/>
+
+    <!-- Base Humanoid 2 (Green) Actuators -->
+    <position name="bot2_abdomen_y" joint="bot2_abdomen_y" kp="100"/>
+    <position name="bot2_abdomen_z" joint="bot2_abdomen_z" kp="100"/>
+    <position name="bot2_abdomen_x" joint="bot2_abdomen_x" kp="100"/>
+    <position name="bot2_hip_x_right" joint="bot2_hip_x_right" kp="100"/>
+    <position name="bot2_hip_z_right" joint="bot2_hip_z_right" kp="100"/>
+    <position name="bot2_hip_y_right" joint="bot2_hip_y_right" kp="100"/>
+    <position name="bot2_knee_right" joint="bot2_knee_right" kp="80"/>
+    <position name="bot2_ankle_x_right" joint="bot2_ankle_x_right" kp="50"/>
+    <position name="bot2_ankle_y_right" joint="bot2_ankle_y_right" kp="50"/>
+    <position name="bot2_hip_x_left" joint="bot2_hip_x_left" kp="100"/>
+    <position name="bot2_hip_z_left" joint="bot2_hip_z_left" kp="100"/>
+    <position name="bot2_hip_y_left" joint="bot2_hip_y_left" kp="100"/>
+    <position name="bot2_knee_left" joint="bot2_knee_left" kp="80"/>
+    <position name="bot2_ankle_x_left" joint="bot2_ankle_x_left" kp="50"/>
+    <position name="bot2_ankle_y_left" joint="bot2_ankle_y_left" kp="50"/>
+    <position name="bot2_shoulder1_right" joint="bot2_shoulder1_right" kp="50"/>
+    <position name="bot2_shoulder2_right" joint="bot2_shoulder2_right" kp="50"/>
+    <position name="bot2_elbow_right" joint="bot2_elbow_right" kp="50"/>
+    <position name="bot2_shoulder1_left" joint="bot2_shoulder1_left" kp="50"/>
+    <position name="bot2_shoulder2_left" joint="bot2_shoulder2_left" kp="50"/>
+    <position name="bot2_elbow_left" joint="bot2_elbow_left" kp="50"/>
+
+    <!-- Top Humanoid (Blue) Actuators -->
+    <position name="top_abdomen_y" joint="top_abdomen_y" kp="100"/>
+    <position name="top_abdomen_z" joint="top_abdomen_z" kp="100"/>
+    <position name="top_abdomen_x" joint="top_abdomen_x" kp="100"/>
+    <position name="top_hip_x_right" joint="top_hip_x_right" kp="100"/>
+    <position name="top_hip_z_right" joint="top_hip_z_right" kp="100"/>
+    <position name="top_hip_y_right" joint="top_hip_y_right" kp="100"/>
+    <position name="top_knee_right" joint="top_knee_right" kp="80"/>
+    <position name="top_ankle_x_right" joint="top_ankle_x_right" kp="50"/>
+    <position name="top_ankle_y_right" joint="top_ankle_y_right" kp="50"/>
+    <position name="top_hip_x_left" joint="top_hip_x_left" kp="100"/>
+    <position name="top_hip_z_left" joint="top_hip_z_left" kp="100"/>
+    <position name="top_hip_y_left" joint="top_hip_y_left" kp="100"/>
+    <position name="top_knee_left" joint="top_knee_left" kp="80"/>
+    <position name="top_ankle_x_left" joint="top_ankle_x_left" kp="50"/>
+    <position name="top_ankle_y_left" joint="top_ankle_y_left" kp="50"/>
+    <position name="top_shoulder1_right" joint="top_shoulder1_right" kp="50"/>
+    <position name="top_shoulder2_right" joint="top_shoulder2_right" kp="50"/>
+    <position name="top_elbow_right" joint="top_elbow_right" kp="50"/>
+    <position name="top_shoulder1_left" joint="top_shoulder1_left" kp="50"/>
+    <position name="top_shoulder2_left" joint="top_shoulder2_left" kp="50"/>
+    <position name="top_elbow_left" joint="top_elbow_left" kp="50"/>
+  </actuator>
+</mujoco>
