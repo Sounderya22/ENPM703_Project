@@ -1,6 +1,6 @@
 import os
 os.environ["LLVM_SUPPRESS_OPTION_REGISTRATION_ERRORS"] = "1"
-os.environ["MUJOCO_GL"] = "osmesa"  # or "egl"
+os.environ["MUJOCO_GL"] = "egl"  # or "egl"
 
 import mujoco  # Import this before torch
 import glfw    # Optional, depending on renderer
