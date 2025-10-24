@@ -4,7 +4,7 @@ from mujoco.glfw import glfw
 from numpy.linalg import inv
 from scipy.spatial.transform import Rotation as R
 import scipy.linalg
-from lqr_controller import lqr
+from controllers.lqr_controller import lqr
 
 class Biped:
     def __init__(self, xml_path):
