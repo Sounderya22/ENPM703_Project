@@ -1,4 +1,4 @@
-.conda/*
+.conda*
 .vscode/*
 __pycache__/
 *.pyc

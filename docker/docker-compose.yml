@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  marl:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: marl:latest
+    container_name: marl_container
+    tty: true
+    environment:
+      # X11 / graphics
+      - DISPLAY=${DISPLAY}
+      - MUJOCO_PATH=/home/ubuntu/.mujoco/mujoco-2.3.7
+      - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MUJOCO_PATH/bin
+      - MJLIB_PATH=$MUJOCO_PATH/bin/libmujoco.so
+      - MUJOCO_GL=glfw
+      - __NV_PRIME_RENDER_OFFLOAD=1
+      - __GLX_VENDOR_LIBRARY_NAME=nvidia
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ..:/home/ubuntu/marl_workspace:cached
+    network_mode: host
+    runtime: nvidia
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
