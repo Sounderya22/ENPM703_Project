@@ -1,10 +1,178 @@
+#!/usr/bin/python
+
 import mujoco as mj
 import numpy as np
 from mujoco.glfw import glfw
 from numpy.linalg import inv
 from scipy.spatial.transform import Rotation as R
 import scipy.linalg
-from controllers.lqr_controller import lqr
+
+def lqr(model, data, qpos0, ctrl0):    
+    nu = model.nu  # Alias for the number of actuators.
+    R_mat = np.eye(nu)
+
+    nv = model.nv  # Shortcut for the number of DoFs.
+
+    # Get the Jacobian for the root body (torso) CoM.
+    mj.mj_resetData(model, data)
+    data.qpos = qpos0
+    mj.mj_forward(model, data)
+    jac_com = np.zeros((3, nv))
+    torso_body_id = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, 'torso')
+    mj.mj_jacSubtreeCom(model, data, jac_com, torso_body_id)
+
+    # Get the Jacobian for the left foot.
+    jac_foot = np.zeros((3, nv))
+    foot_body_id = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, 'foot_left')
+    mj.mj_jacBodyCom(model, data, jac_foot, None, foot_body_id)
+
+    jac_diff = jac_com - jac_foot
+    Qbalance = jac_diff.T @ jac_diff
+
+    # Get all joint names.
+    joint_names = [
+        mj.mj_id2name(model, mj.mjtObj.mjOBJ_JOINT, i)
+        for i in range(model.njnt)
+    ]
+
+    # Get indices into relevant sets of joints.
+    root_dofs = range(6)
+    body_dofs = range(6, nv)
+    abdomen_dofs = [
+        model.joint(name).dofadr[0]
+        for name in joint_names
+        if 'abdomen' in name
+        and not 'z' in name
+    ]
+    left_leg_dofs = [
+        model.joint(name).dofadr[0]
+        for name in joint_names
+        if 'left' in name
+        and ('hip' in name or 'knee' in name or 'ankle' in name)
+        and not 'z' in name
+    ]
+    balance_dofs = abdomen_dofs + left_leg_dofs
+    other_dofs = np.setdiff1d(body_dofs, balance_dofs)
+
+    # Cost coefficients.
+    BALANCE_COST        = 1000  # Balancing.
+    BALANCE_JOINT_COST  = 3     # Joints required for balancing.
+    OTHER_JOINT_COST    = .3    # Other joints.
+
+    # Construct the Qjoint matrix.
+    Qjoint = np.eye(nv)
+    Qjoint[root_dofs, root_dofs] *= 0  # Don't penalize free joint directly.
+    Qjoint[balance_dofs, balance_dofs] *= BALANCE_JOINT_COST
+    Qjoint[other_dofs, other_dofs] *= OTHER_JOINT_COST
+
+    # Construct the Q matrix for position DoFs.
+    Qpos = BALANCE_COST * Qbalance + Qjoint
+
+    # Qpos = np.eye(nv)
+
+    # No explicit penalty for velocities.
+    Q = np.block([[Qpos, np.zeros((nv, nv))],
+                [np.zeros((nv, 2*nv))]])
+
+
+    # Set the initial state and control.
+    mj.mj_resetData(model, data)
+    data.ctrl = ctrl0
+    data.qpos = qpos0
+
+    # Allocate the A and B matrices, compute them.
+    A = np.zeros((2*nv, 2*nv))
+    B = np.zeros((2*nv, nu))
+    epsilon = 1e-6
+    centered = True
+    mj.mjd_transitionFD(model, data, epsilon, centered, A, B, None, None)
+
+    # Solve discrete Riccati equation.
+    P = scipy.linalg.solve_discrete_are(A, B, Q, R_mat)
+
+    # Compute the feedback gain matrix K.
+    K = np.linalg.inv(R_mat + B.T @ P @ B) @ B.T @ P @ A
+
+    data.qpos = qpos0
+
+    # Allocate position difference dq.
+    dq = np.zeros(model.nv)
+
+    return K, dq, P, A, B, Q
+
+def compute_stability_metrics(model, data, P, A, B, K, qpos0, prev_state_error=None, dt=0.0):
+    """
+    Compute comprehensive stability metrics for the LQR-controlled system
+    """
+    # Current state deviation from desired
+    dq_current = np.zeros(model.nv)
+    mj.mj_differentiatePos(model, dq_current, 1, qpos0, data.qpos)
+    state_error = np.concatenate([dq_current, data.qvel])
+    
+    # 1. LQR Cost-to-Go (Primary stability metric)
+    cost_to_go = state_error.T @ P @ state_error
+    
+    # 2. Normalized stability score (0-1 scale)
+    stability_score = 1.0 / (1.0 + 0.1 * cost_to_go)
+    
+    # 3. Eigenvalue stability analysis
+    A_cl = A - B @ K  # Closed-loop dynamics
+    eigvals = np.linalg.eigvals(A_cl)
+    
+    # Stability margin - distance from instability
+    real_parts = np.real(eigvals)
+    stability_margin = np.min(-real_parts) if np.all(real_parts < 0) else 0
+    
+    # Damping ratios for oscillatory modes
+    damping_ratios = []
+    for eig in eigvals:
+        if np.imag(eig) != 0:  # Complex pair
+            wn = np.abs(eig)
+            zeta = -np.real(eig) / wn
+            damping_ratios.append(zeta)
+    
+    avg_damping = np.mean(damping_ratios) if damping_ratios else 1.0
+    min_damping = np.min(damping_ratios) if damping_ratios else 1.0
+    
+    # 4. Physical stability metrics
+    com_velocity = np.linalg.norm(data.cvel[1][3:6])  # Torso linear velocity
+    com_height = data.subtree_com[1][2]  # Torso COM height
+    
+    # 5. Control effort
+    torque_usage = np.linalg.norm(data.ctrl)
+    max_torque = np.max(np.abs(data.ctrl))
+    
+    # 6. Lyapunov rate of change (if previous state available)
+    lyapunov_rate = 0.0
+    if prev_state_error is not None and dt > 0:
+        V_prev = prev_state_error.T @ P @ prev_state_error
+        V_current = cost_to_go
+        lyapunov_rate = (V_current - V_prev) / dt
+    
+    # 7. Comprehensive combined score
+    comprehensive_score = (
+        stability_score * 0.4 +                    # LQR performance
+        min_damping * 0.3 +                        # Worst-case damping
+        np.exp(-com_velocity) * 0.2 +              # COM velocity penalty
+        np.exp(-torque_usage/10) * 0.1             # Control effort penalty
+    )
+    
+    return {
+        'stability_score': stability_score,
+        'comprehensive_score': comprehensive_score,
+        'lqr_cost': cost_to_go,
+        'stability_margin': stability_margin,
+        'avg_damping': avg_damping,
+        'min_damping': min_damping,
+        'com_velocity': com_velocity,
+        'com_height': com_height,
+        'torque_usage': torque_usage,
+        'max_torque': max_torque,
+        'lyapunov_rate': lyapunov_rate,
+        'state_error': state_error.copy(),
+        'is_stable': stability_margin > 0 and lyapunov_rate <= 0
+    }
+
 
 class Biped:
     def __init__(self, xml_path):
@@ -14,6 +182,11 @@ class Biped:
         self.sim_end = 110.0
 
         self.arms = None  # "fixed"
+        
+        # Stability tracking
+        self.stability_history = []
+        self.prev_state_error = None
+        self.stability_data = []
 
         # Initialize GLFW and visualization
         if not glfw.init():
@@ -56,6 +229,9 @@ class Biped:
         if act == glfw.PRESS and key == glfw.KEY_BACKSPACE:
             mj.mj_resetData(self.model, self.data)
             mj.mj_forward(self.model, self.data)
+            self.stability_history = []
+            self.prev_state_error = None
+            self.stability_data = []
 
     def _mouse_button(self, window, button, act, mods):
         self.button_left = (glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_LEFT) == glfw.PRESS)
@@ -95,17 +271,22 @@ class Biped:
         # Stand on 2 legs
         qpos0, ctrl0 = self.stand_two_legs()
 
-        # Get the LQR Controller Value K
-        K, dq = lqr(self.model, self.data, qpos0, ctrl0)
+        # Get the LQR Controller Value K and stability matrices
+        K, dq, P, A, B, Q = lqr(self.model, self.data, qpos0, ctrl0)
 
         # Perturbations 
         CTRL_STD, perturb = self.noise()
 
-        return qpos0, ctrl0, K, dq, CTRL_STD, perturb
+        # Reset stability tracking
+        self.stability_history = []
+        self.prev_state_error = None
+        self.stability_data = []
 
-    def controller(self, dq, qpos0, ctrl0, K, CTRL_STD, perturb, step):
+        return qpos0, ctrl0, K, dq, CTRL_STD, perturb, P, A, B
+
+    def controller(self, dq, qpos0, ctrl0, K, CTRL_STD, perturb, step, P, A, B):
         """
-        LQR controller
+        LQR controller with stability monitoring
         """
         # Get state difference dx.
         mj.mj_differentiatePos(self.model, dq, 1, qpos0, self.data.qpos)
@@ -132,33 +313,64 @@ class Biped:
 
         # Add perturbation, increment step.
         self.data.ctrl += CTRL_STD * perturb[step]
+        
+        # Compute stability metrics
+        dt = self.model.opt.timestep
+        stability_metrics = compute_stability_metrics(
+            self.model, self.data, P, A, B, K, qpos0, self.prev_state_error, dt
+        )
+        
+        # Store for next iteration
+        self.prev_state_error = stability_metrics['state_error']
+        
+        # Add to history
+        self.stability_history.append(stability_metrics['stability_score'])
+        self.stability_data.append(stability_metrics)
+        
+        # Print stability info periodically
+        if step % 100 == 0:
+            self.print_stability_info(stability_metrics, step)
+            
+        return stability_metrics
+
+    def print_stability_info(self, metrics, step):
+        """Print current stability information"""
+        print(f"Step {step}: "
+              f"Stability: {metrics['stability_score']:.3f}, "
+              f"Comp: {metrics['comprehensive_score']:.3f}, "
+              f"LQR Cost: {metrics['lqr_cost']:.1f}, "
+              f"COM Vel: {metrics['com_velocity']:.3f}, "
+              f"Torque: {metrics['torque_usage']:.2f}, "
+              f"Stable: {metrics['is_stable']}")
 
     def simulate(self):
         step = 0
-        qpos0, ctrl0, K, dq, CTRL_STD, perturb = self.reset()
+        qpos0, ctrl0, K, dq, CTRL_STD, perturb, P, A, B = self.reset()
         
         while not glfw.window_should_close(self.window):
             simstart = self.data.time
 
             # Apply periodic external forces
-            x = 10 * int(self.data.time / 10)
+            x = 5 * int(self.data.time / 5)
             y = x + 0.2
-            if self.data.time >= x and self.data.time <= y:
-                self.apply_external_forces([55.0 + 2 * x / 10, 0.0, 0.0])
-            else:
-                self.apply_external_forces([0.0, 0.0, 0.0])
+            # if self.data.time >= x and self.data.time <= y:
+            #     self.apply_external_forces([55.0 + 2 * x / 10, 0.0, 0.0])
+            # else:
+            #     self.apply_external_forces([0.0, 0.0, 0.0])
             
             while (self.data.time - simstart < 1.0 / 60.0):
                 # Step simulation environment
                 mj.mj_step(self.model, self.data)
 
-                # Apply control
-                self.controller(dq, qpos0, ctrl0, K, CTRL_STD, perturb, step)
+                # Apply control with stability monitoring
+                stability_metrics = self.controller(dq, qpos0, ctrl0, K, CTRL_STD, perturb, step, P, A, B)
                 step += 1
                 if step >= 2390:
                     step = 0
 
             if self.data.time >= self.sim_end:
+                # Print final stability summary
+                self.print_final_stability_summary()
                 break
 
             # get framebuffer viewport
@@ -190,6 +402,46 @@ class Biped:
             glfw.poll_events()
 
         glfw.terminate()
+
+    def print_final_stability_summary(self):
+        """Print comprehensive stability analysis at the end of simulation"""
+        if not self.stability_data:
+            return
+            
+        print("\n" + "="*60)
+        print("FINAL STABILITY ANALYSIS")
+        print("="*60)
+        
+        # Calculate statistics
+        stability_scores = [d['stability_score'] for d in self.stability_data]
+        comp_scores = [d['comprehensive_score'] for d in self.stability_data]
+        lqr_costs = [d['lqr_cost'] for d in self.stability_data]
+        com_velocities = [d['com_velocity'] for d in self.stability_data]
+        torque_usages = [d['torque_usage'] for d in self.stability_data]
+        stable_states = [d['is_stable'] for d in self.stability_data]
+        
+        print(f"Average Stability Score: {np.mean(stability_scores):.3f} ± {np.std(stability_scores):.3f}")
+        print(f"Average Comprehensive Score: {np.mean(comp_scores):.3f} ± {np.std(comp_scores):.3f}")
+        print(f"Average LQR Cost: {np.mean(lqr_costs):.1f} ± {np.std(lqr_costs):.1f}")
+        print(f"Average COM Velocity: {np.mean(com_velocities):.3f} ± {np.std(com_velocities):.3f}")
+        print(f"Average Torque Usage: {np.mean(torque_usages):.2f} ± {np.std(torque_usages):.2f}")
+        print(f"Stable States: {np.sum(stable_states)}/{len(stable_states)} ({np.mean(stable_states)*100:.1f}%)")
+        print(f"Minimum Stability Score: {np.min(stability_scores):.3f}")
+        print(f"Maximum Stability Score: {np.max(stability_scores):.3f}")
+        
+        # Stability classification
+        avg_stability = np.mean(stability_scores)
+        if avg_stability > 0.8:
+            stability_class = "EXCELLENT"
+        elif avg_stability > 0.6:
+            stability_class = "GOOD"
+        elif avg_stability > 0.4:
+            stability_class = "MARGINAL"
+        else:
+            stability_class = "POOR"
+            
+        print(f"Overall Stability: {stability_class}")
+        print("="*60)
 
     def quat2euler(self, quat):
         _quat = np.concatenate([quat[1:], quat[:1]])

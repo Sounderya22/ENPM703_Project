@@ -97,4 +97,5 @@ def lqr(model, data, qpos0, ctrl0):
     # Allocate position difference dq.
     dq = np.zeros(model.nv)
 
-    return K, dq
+    return K, dq, P
+
