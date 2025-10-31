@@ -108,8 +108,8 @@
     <!-- Fixed spotlight - removed targetbodycom mode -->
     <light name="spotlight" diffuse=".8 .8 .8" specular="0.3 0.3 0.3" pos="0 -4 4" dir="0 1 0" directional="true"/>
     
-    <!-- Humanoid 1 - North position -->
-    <body name="humanoid1" pos="0 0.8 1.282" childclass="body">
+    <!-- Humanoid 1 - North position, facing outward -->
+    <body name="humanoid1" pos="0 0.8 1.282" euler="0 0 0" childclass="body">
       <freejoint name="root1"/>
       <geom name="torso1" fromto="0 -.07 0 0 .07 0" size=".07"/>
       <geom name="waist_upper1" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06"/>
@@ -158,13 +158,13 @@
           </body>
         </body>
       </body>
-      <!-- Arms for humanoid1 -->
+      <!-- Arms for humanoid1 - positioned for welding -->
       <body name="upper_arm_right1" pos="0 -.17 .06">
-        <joint name="shoulder1_right1" axis="2 1 1" class="shoulder"/>
-        <joint name="shoulder2_right1" axis="0 -1 1" class="shoulder"/>
+        <joint name="shoulder1_right1" axis="2 1 1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_right1" axis="0 -1 1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_right1" fromto="0 0 0 .16 -.16 -.16" class="arm_upper"/>
         <body name="lower_arm_right1" pos=".18 -.18 -.18">
-          <joint name="elbow_right1" axis="0 -1 1" class="elbow"/>
+          <joint name="elbow_right1" axis="0 -1 1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_right1" fromto=".01 .01 .01 .17 .17 .17" class="arm_lower"/>
           <body name="hand_right1" pos=".18 .18 .18">
             <geom name="hand_right1" zaxis="1 1 1" class="hand"/>
@@ -172,11 +172,11 @@
         </body>
       </body>
       <body name="upper_arm_left1" pos="0 .17 .06">
-        <joint name="shoulder1_left1" axis="-2 1 -1" class="shoulder"/>
-        <joint name="shoulder2_left1" axis="0 -1 -1" class="shoulder"/>
+        <joint name="shoulder1_left1" axis="-2 1 -1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_left1" axis="0 -1 -1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_left1" fromto="0 0 0 .16 .16 -.16" class="arm_upper"/>
         <body name="lower_arm_left1" pos=".18 .18 -.18">
-          <joint name="elbow_left1" axis="0 -1 -1" class="elbow"/>
+          <joint name="elbow_left1" axis="0 -1 -1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_left1" fromto=".01 -.01 .01 .17 -.17 .17" class="arm_lower"/>
           <body name="hand_left1" pos=".18 -.18 .18">
             <geom name="hand_left1" zaxis="1 -1 1" class="hand"/>
@@ -185,8 +185,8 @@
       </body>
     </body>
 
-    <!-- Humanoid 2 - East position -->
-    <body name="humanoid2" pos="0.8 0 1.282" childclass="body">
+    <!-- Humanoid 2 - East position, facing outward -->
+    <body name="humanoid2" pos="0.8 0 1.282" euler="0 0 -90" childclass="body">
       <freejoint name="root2"/>
       <geom name="torso2" fromto="0 -.07 0 0 .07 0" size=".07"/>
       <geom name="waist_upper2" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06"/>
@@ -235,13 +235,13 @@
           </body>
         </body>
       </body>
-      <!-- Arms for humanoid2 -->
+      <!-- Arms for humanoid2 - positioned for welding -->
       <body name="upper_arm_right2" pos="0 -.17 .06">
-        <joint name="shoulder1_right2" axis="2 1 1" class="shoulder"/>
-        <joint name="shoulder2_right2" axis="0 -1 1" class="shoulder"/>
+        <joint name="shoulder1_right2" axis="2 1 1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_right2" axis="0 -1 1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_right2" fromto="0 0 0 .16 -.16 -.16" class="arm_upper"/>
         <body name="lower_arm_right2" pos=".18 -.18 -.18">
-          <joint name="elbow_right2" axis="0 -1 1" class="elbow"/>
+          <joint name="elbow_right2" axis="0 -1 1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_right2" fromto=".01 .01 .01 .17 .17 .17" class="arm_lower"/>
           <body name="hand_right2" pos=".18 .18 .18">
             <geom name="hand_right2" zaxis="1 1 1" class="hand"/>
@@ -249,11 +249,11 @@
         </body>
       </body>
       <body name="upper_arm_left2" pos="0 .17 .06">
-        <joint name="shoulder1_left2" axis="-2 1 -1" class="shoulder"/>
-        <joint name="shoulder2_left2" axis="0 -1 -1" class="shoulder"/>
+        <joint name="shoulder1_left2" axis="-2 1 -1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_left2" axis="0 -1 -1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_left2" fromto="0 0 0 .16 .16 -.16" class="arm_upper"/>
         <body name="lower_arm_left2" pos=".18 .18 -.18">
-          <joint name="elbow_left2" axis="0 -1 -1" class="elbow"/>
+          <joint name="elbow_left2" axis="0 -1 -1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_left2" fromto=".01 -.01 .01 .17 -.17 .17" class="arm_lower"/>
           <body name="hand_left2" pos=".18 -.18 .18">
             <geom name="hand_left2" zaxis="1 -1 1" class="hand"/>
@@ -262,8 +262,8 @@
       </body>
     </body>
 
-    <!-- Humanoid 3 - South position -->
-    <body name="humanoid3" pos="0 -0.8 1.282" childclass="body">
+    <!-- Humanoid 3 - South position, facing outward -->
+    <body name="humanoid3" pos="0 -0.8 1.282" euler="0 0 180" childclass="body">
       <freejoint name="root3"/>
       <geom name="torso3" fromto="0 -.07 0 0 .07 0" size=".07"/>
       <geom name="waist_upper3" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06"/>
@@ -312,13 +312,13 @@
           </body>
         </body>
       </body>
-      <!-- Arms for humanoid3 -->
+      <!-- Arms for humanoid3 - positioned for welding -->
       <body name="upper_arm_right3" pos="0 -.17 .06">
-        <joint name="shoulder1_right3" axis="2 1 1" class="shoulder"/>
-        <joint name="shoulder2_right3" axis="0 -1 1" class="shoulder"/>
+        <joint name="shoulder1_right3" axis="2 1 1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_right3" axis="0 -1 1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_right3" fromto="0 0 0 .16 -.16 -.16" class="arm_upper"/>
         <body name="lower_arm_right3" pos=".18 -.18 -.18">
-          <joint name="elbow_right3" axis="0 -1 1" class="elbow"/>
+          <joint name="elbow_right3" axis="0 -1 1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_right3" fromto=".01 .01 .01 .17 .17 .17" class="arm_lower"/>
           <body name="hand_right3" pos=".18 .18 .18">
             <geom name="hand_right3" zaxis="1 1 1" class="hand"/>
@@ -326,11 +326,11 @@
         </body>
       </body>
       <body name="upper_arm_left3" pos="0 .17 .06">
-        <joint name="shoulder1_left3" axis="-2 1 -1" class="shoulder"/>
-        <joint name="shoulder2_left3" axis="0 -1 -1" class="shoulder"/>
+        <joint name="shoulder1_left3" axis="-2 1 -1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_left3" axis="0 -1 -1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_left3" fromto="0 0 0 .16 .16 -.16" class="arm_upper"/>
         <body name="lower_arm_left3" pos=".18 .18 -.18">
-          <joint name="elbow_left3" axis="0 -1 -1" class="elbow"/>
+          <joint name="elbow_left3" axis="0 -1 -1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_left3" fromto=".01 -.01 .01 .17 -.17 .17" class="arm_lower"/>
           <body name="hand_left3" pos=".18 -.18 .18">
             <geom name="hand_left3" zaxis="1 -1 1" class="hand"/>
@@ -339,8 +339,8 @@
       </body>
     </body>
 
-    <!-- Humanoid 4 - West position -->
-    <body name="humanoid4" pos="-0.8 0 1.282" childclass="body">
+    <!-- Humanoid 4 - West position, facing outward -->
+    <body name="humanoid4" pos="-0.8 0 1.282" euler="0 0 90" childclass="body">
       <freejoint name="root4"/>
       <geom name="torso4" fromto="0 -.07 0 0 .07 0" size=".07"/>
       <geom name="waist_upper4" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06"/>
@@ -389,13 +389,13 @@
           </body>
         </body>
       </body>
-      <!-- Arms for humanoid4 -->
+      <!-- Arms for humanoid4 - positioned for welding -->
       <body name="upper_arm_right4" pos="0 -.17 .06">
-        <joint name="shoulder1_right4" axis="2 1 1" class="shoulder"/>
-        <joint name="shoulder2_right4" axis="0 -1 1" class="shoulder"/>
+        <joint name="shoulder1_right4" axis="2 1 1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_right4" axis="0 -1 1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_right4" fromto="0 0 0 .16 -.16 -.16" class="arm_upper"/>
         <body name="lower_arm_right4" pos=".18 -.18 -.18">
-          <joint name="elbow_right4" axis="0 -1 1" class="elbow"/>
+          <joint name="elbow_right4" axis="0 -1 1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_right4" fromto=".01 .01 .01 .17 .17 .17" class="arm_lower"/>
           <body name="hand_right4" pos=".18 .18 .18">
             <geom name="hand_right4" zaxis="1 1 1" class="hand"/>
@@ -403,11 +403,11 @@
         </body>
       </body>
       <body name="upper_arm_left4" pos="0 .17 .06">
-        <joint name="shoulder1_left4" axis="-2 1 -1" class="shoulder"/>
-        <joint name="shoulder2_left4" axis="0 -1 -1" class="shoulder"/>
+        <joint name="shoulder1_left4" axis="-2 1 -1" class="shoulder" pos="0 0 0"/>
+        <joint name="shoulder2_left4" axis="0 -1 -1" class="shoulder" pos="0 0 0"/>
         <geom name="upper_arm_left4" fromto="0 0 0 .16 .16 -.16" class="arm_upper"/>
         <body name="lower_arm_left4" pos=".18 .18 -.18">
-          <joint name="elbow_left4" axis="0 -1 -1" class="elbow"/>
+          <joint name="elbow_left4" axis="0 -1 -1" class="elbow" pos="0 0 0"/>
           <geom name="lower_arm_left4" fromto=".01 -.01 .01 .17 -.17 .17" class="arm_lower"/>
           <body name="hand_left4" pos=".18 -.18 .18">
             <geom name="hand_left4" zaxis="1 -1 1" class="hand"/>
@@ -416,19 +416,6 @@
       </body>
     </body>
 
-    <!-- Visual connectors between shoulders -->
-    <body name="connector_1_2" pos="0.4 0.4 1.4">
-      <geom type="cylinder" fromto="-0.4 0.4 0 0.4 -0.4 0" size="0.02" material="connector"/>
-    </body>
-    <body name="connector_2_3" pos="0.4 -0.4 1.4">
-      <geom type="cylinder" fromto="0.4 0.4 0 -0.4 -0.4 0" size="0.02" material="connector"/>
-    </body>
-    <body name="connector_3_4" pos="-0.4 -0.4 1.4">
-      <geom type="cylinder" fromto="0.4 -0.4 0 -0.4 0.4 0" size="0.02" material="connector"/>
-    </body>
-    <body name="connector_4_1" pos="-0.4 0.4 1.4">
-      <geom type="cylinder" fromto="-0.4 -0.4 0 0.4 0.4 0" size="0.02" material="connector"/>
-    </body>
   </worldbody>
 
   <equality>
@@ -451,6 +438,98 @@
   </contact>
 
   <actuator>
-    <!-- Actuators for all humanoids would go here, but removed for simplicity -->
+    <actuator>
+  <!-- Humanoid 1 Actuators -->
+  <motor name="abdomen_z1" joint="abdomen_z1" gear="20"/>
+  <motor name="abdomen_y1" joint="abdomen_y1" gear="50"/>
+  <motor name="abdomen_x1" joint="abdomen_x1" gear="50"/>
+  <motor name="hip_x_right1" joint="hip_x_right1" gear="100"/>
+  <motor name="hip_z_right1" joint="hip_z_right1" gear="100"/>
+  <motor name="hip_y_right1" joint="hip_y_right1" gear="100"/>
+  <motor name="knee_right1" joint="knee_right1" gear="100"/>
+  <motor name="ankle_y_right1" joint="ankle_y_right1" gear="50"/>
+  <motor name="ankle_x_right1" joint="ankle_x_right1" gear="30"/>
+  <motor name="hip_x_left1" joint="hip_x_left1" gear="100"/>
+  <motor name="hip_z_left1" joint="hip_z_left1" gear="100"/>
+  <motor name="hip_y_left1" joint="hip_y_left1" gear="100"/>
+  <motor name="knee_left1" joint="knee_left1" gear="100"/>
+  <motor name="ankle_y_left1" joint="ankle_y_left1" gear="50"/>
+  <motor name="ankle_x_left1" joint="ankle_x_left1" gear="30"/>
+  <motor name="shoulder1_right1" joint="shoulder1_right1" gear="40"/>
+  <motor name="shoulder2_right1" joint="shoulder2_right1" gear="40"/>
+  <motor name="elbow_right1" joint="elbow_right1" gear="30"/>
+  <motor name="shoulder1_left1" joint="shoulder1_left1" gear="40"/>
+  <motor name="shoulder2_left1" joint="shoulder2_left1" gear="40"/>
+  <motor name="elbow_left1" joint="elbow_left1" gear="30"/>
+
+  <!-- Humanoid 2 Actuators -->
+  <motor name="abdomen_z2" joint="abdomen_z2" gear="20"/>
+  <motor name="abdomen_y2" joint="abdomen_y2" gear="50"/>
+  <motor name="abdomen_x2" joint="abdomen_x2" gear="50"/>
+  <motor name="hip_x_right2" joint="hip_x_right2" gear="100"/>
+  <motor name="hip_z_right2" joint="hip_z_right2" gear="100"/>
+  <motor name="hip_y_right2" joint="hip_y_right2" gear="100"/>
+  <motor name="knee_right2" joint="knee_right2" gear="100"/>
+  <motor name="ankle_y_right2" joint="ankle_y_right2" gear="50"/>
+  <motor name="ankle_x_right2" joint="ankle_x_right2" gear="30"/>
+  <motor name="hip_x_left2" joint="hip_x_left2" gear="100"/>
+  <motor name="hip_z_left2" joint="hip_z_left2" gear="100"/>
+  <motor name="hip_y_left2" joint="hip_y_left2" gear="100"/>
+  <motor name="knee_left2" joint="knee_left2" gear="100"/>
+  <motor name="ankle_y_left2" joint="ankle_y_left2" gear="50"/>
+  <motor name="ankle_x_left2" joint="ankle_x_left2" gear="30"/>
+  <motor name="shoulder1_right2" joint="shoulder1_right2" gear="40"/>
+  <motor name="shoulder2_right2" joint="shoulder2_right2" gear="40"/>
+  <motor name="elbow_right2" joint="elbow_right2" gear="30"/>
+  <motor name="shoulder1_left2" joint="shoulder1_left2" gear="40"/>
+  <motor name="shoulder2_left2" joint="shoulder2_left2" gear="40"/>
+  <motor name="elbow_left2" joint="elbow_left2" gear="30"/>
+
+  <!-- Humanoid 3 Actuators -->
+  <motor name="abdomen_z3" joint="abdomen_z3" gear="20"/>
+  <motor name="abdomen_y3" joint="abdomen_y3" gear="50"/>
+  <motor name="abdomen_x3" joint="abdomen_x3" gear="50"/>
+  <motor name="hip_x_right3" joint="hip_x_right3" gear="100"/>
+  <motor name="hip_z_right3" joint="hip_z_right3" gear="100"/>
+  <motor name="hip_y_right3" joint="hip_y_right3" gear="100"/>
+  <motor name="knee_right3" joint="knee_right3" gear="100"/>
+  <motor name="ankle_y_right3" joint="ankle_y_right3" gear="50"/>
+  <motor name="ankle_x_right3" joint="ankle_x_right3" gear="30"/>
+  <motor name="hip_x_left3" joint="hip_x_left3" gear="100"/>
+  <motor name="hip_z_left3" joint="hip_z_left3" gear="100"/>
+  <motor name="hip_y_left3" joint="hip_y_left3" gear="100"/>
+  <motor name="knee_left3" joint="knee_left3" gear="100"/>
+  <motor name="ankle_y_left3" joint="ankle_y_left3" gear="50"/>
+  <motor name="ankle_x_left3" joint="ankle_x_left3" gear="30"/>
+  <motor name="shoulder1_right3" joint="shoulder1_right3" gear="40"/>
+  <motor name="shoulder2_right3" joint="shoulder2_right3" gear="40"/>
+  <motor name="elbow_right3" joint="elbow_right3" gear="30"/>
+  <motor name="shoulder1_left3" joint="shoulder1_left3" gear="40"/>
+  <motor name="shoulder2_left3" joint="shoulder2_left3" gear="40"/>
+  <motor name="elbow_left3" joint="elbow_left3" gear="30"/>
+
+  <!-- Humanoid 4 Actuators -->
+  <motor name="abdomen_z4" joint="abdomen_z4" gear="20"/>
+  <motor name="abdomen_y4" joint="abdomen_y4" gear="50"/>
+  <motor name="abdomen_x4" joint="abdomen_x4" gear="50"/>
+  <motor name="hip_x_right4" joint="hip_x_right4" gear="100"/>
+  <motor name="hip_z_right4" joint="hip_z_right4" gear="100"/>
+  <motor name="hip_y_right4" joint="hip_y_right4" gear="100"/>
+  <motor name="knee_right4" joint="knee_right4" gear="100"/>
+  <motor name="ankle_y_right4" joint="ankle_y_right4" gear="50"/>
+  <motor name="ankle_x_right4" joint="ankle_x_right4" gear="30"/>
+  <motor name="hip_x_left4" joint="hip_x_left4" gear="100"/>
+  <motor name="hip_z_left4" joint="hip_z_left4" gear="100"/>
+  <motor name="hip_y_left4" joint="hip_y_left4" gear="100"/>
+  <motor name="knee_left4" joint="knee_left4" gear="100"/>
+  <motor name="ankle_y_left4" joint="ankle_y_left4" gear="50"/>
+  <motor name="ankle_x_left4" joint="ankle_x_left4" gear="30"/>
+  <motor name="shoulder1_right4" joint="shoulder1_right4" gear="40"/>
+  <motor name="shoulder2_right4" joint="shoulder2_right4" gear="40"/>
+  <motor name="elbow_right4" joint="elbow_right4" gear="30"/>
+  <motor name="shoulder1_left4" joint="shoulder1_left4" gear="40"/>
+  <motor name="shoulder2_left4" joint="shoulder2_left4" gear="40"/>
+  <motor name="elbow_left4" joint="elbow_left4" gear="30"/>
+</actuator>
   </actuator>
 </mujoco>
