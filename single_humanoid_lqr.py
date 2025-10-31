@@ -455,6 +455,7 @@ class Biped:
         self.data.qacc = 0
         mj.mj_inverse(self.model, self.data)
 
+        # Scan height offsets to find neutral stance torque
         height_offsets = np.linspace(-0.001, 0.001, 2001)
         vertical_forces = []
         for offset in height_offsets:
@@ -476,14 +477,31 @@ class Biped:
         mj.mj_inverse(self.model, self.data)
         qfrc0 = self.data.qfrc_inverse.copy()
 
-        ctrl0 = np.atleast_2d(qfrc0) @ np.linalg.pinv(self.data.actuator_moment)
+        # ✅ Build actuator moment matrix by probing each actuator
+        nu = self.model.nu
+        nv = self.model.nv
+        actuator_moment = np.zeros((nu, nv))
+
+        for i in range(nu):
+            mj.mj_resetData(self.model, self.data)
+            self.data.qpos = qpos0.copy()
+            self.data.ctrl[:] = 0.0
+            self.data.ctrl[i] = 1.0    # unit input to actuator i
+            mj.mj_forward(self.model, self.data)
+            actuator_moment[i, :] = self.data.qfrc_actuator.copy()
+
+        # Solve least-squares for control torques
+        ctrl0 = np.atleast_2d(qfrc0) @ np.linalg.pinv(actuator_moment)
         ctrl0 = ctrl0.flatten()
 
+        # Reset sim with solution
         mj.mj_resetData(self.model, self.data)
-        self.data.qpos = qpos0
-        self.data.ctrl = ctrl0
+        self.data.qpos = qpos0.copy()
+        self.data.ctrl = ctrl0.copy()
 
         return qpos0, ctrl0
+
+
 
     def noise(self):
         nu = self.model.nu
