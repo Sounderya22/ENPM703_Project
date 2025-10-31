@@ -1,51 +1,29 @@
-<mujoco model="Humanoid Standing on Shoulders">
-  <option timestep="0.005"/>
+<mujoco>
   <compiler autolimits="true"/>
   
-  <visual>
-    <map force="0.1" zfar="30"/>
-    <rgba haze="0.15 0.25 0.35 1"/>
-    <global offwidth="2560" offheight="1440"/>
-  </visual>
-
-  <asset>
-    <texture type="skybox" builtin="gradient" rgb1=".3 .5 .7" rgb2="0 0 0" width="32" height="512"/>
-    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".1 .2 .3" rgb2=".2 .3 .4"/>
-    <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2"/>
-    <material name="red" rgba="0.8 0.3 0.3 1"/>
-    <material name="green" rgba="0.3 0.8 0.3 1"/>
-    <material name="blue" rgba="0.3 0.3 0.8 1"/>
-  </asset>
-
   <worldbody>
-    <!-- Ground -->
-    <geom name="ground" type="plane" size="50 50 0.1" material="grid" condim="3"/>
-    
-    <light directional="true" diffuse="0.6 0.6 0.6" specular="0.3 0.3 0.3" pos="0 0 4" dir="0 0 -1"/>
-    <light name="spotlight" pos="0 -4 3" dir="0 0.5 -1" diffuse=".8 .8 .8" directional="true"/>
-    
     <!-- Bottom humanoid 1 (Red) - positioned so shoulders touch -->
     <body name="bottom_shoulder_bot" pos="0 0 1">
       <freejoint name="bottom_shoulder_bot_root"/>
       <body name="bottom_shoulder_bot_torso" pos="0 0 0.282">
-        <geom name="bottom_shoulder_bot_torso" fromto="0 -.07 0 0 .07 0" size=".07" type="capsule" material="red"/>
-        <geom name="bottom_shoulder_bot_waist_upper" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" type="capsule" material="red"/>
+        <geom name="bottom_shoulder_bot_torso" fromto="0 -.07 0 0 .07 0" size=".07" type="capsule"/>
+        <geom name="bottom_shoulder_bot_waist_upper" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" type="capsule"/>
         
         <!-- Head -->
         <body name="bottom_shoulder_bot_head" pos="0 0 .19">
-          <geom name="bottom_shoulder_bot_head" type="sphere" size=".09" material="red"/>
+          <geom name="bottom_shoulder_bot_head" type="sphere" size=".09"/>
         </body>
         
         <!-- Right Arm -->
         <body name="bottom_shoulder_bot_upper_arm_right" pos="0 -.17 .06">
           <joint name="bottom_shoulder_bot_shoulder1_right" type="hinge" axis="2 1 1" range="-85 60"/>
           <joint name="bottom_shoulder_bot_shoulder2_right" type="hinge" axis="0 -1 1" range="-85 60"/>
-          <geom name="bottom_shoulder_bot_upper_arm_right" fromto="0 0 0 .16 -.16 -.16" size=".04" type="capsule" material="red"/>
+          <geom name="bottom_shoulder_bot_upper_arm_right" fromto="0 0 0 .16 -.16 -.16" size=".04" type="capsule"/>
           <body name="bottom_shoulder_bot_lower_arm_right" pos=".18 -.18 -.18">
             <joint name="bottom_shoulder_bot_elbow_right" type="hinge" axis="0 -1 1" range="-100 50"/>
-            <geom name="bottom_shoulder_bot_lower_arm_right" fromto=".01 .01 .01 .17 .17 .17" size=".031" type="capsule" material="red"/>
+            <geom name="bottom_shoulder_bot_lower_arm_right" fromto=".01 .01 .01 .17 .17 .17" size=".031" type="capsule"/>
             <body name="bottom_shoulder_bot_hand_right" pos=".18 .18 .18">
-              <geom name="bottom_shoulder_bot_hand_right" type="sphere" size=".04" material="red"/>
+              <geom name="bottom_shoulder_bot_hand_right" type="sphere" size=".04"/>
             </body>
           </body>
         </body>
@@ -54,39 +32,39 @@
         <body name="bottom_shoulder_bot_upper_arm_left" pos="0 .17 .06">
           <joint name="bottom_shoulder_bot_shoulder1_left" type="hinge" axis="-2 1 -1" range="-85 60"/>
           <joint name="bottom_shoulder_bot_shoulder2_left" type="hinge" axis="0 -1 -1" range="-85 60"/>
-          <geom name="bottom_shoulder_bot_upper_arm_left" fromto="0 0 0 .16 .16 -.16" size=".04" type="capsule" material="red"/>
+          <geom name="bottom_shoulder_bot_upper_arm_left" fromto="0 0 0 .16 .16 -.16" size=".04" type="capsule"/>
           <body name="bottom_shoulder_bot_lower_arm_left" pos=".18 .18 -.18">
             <joint name="bottom_shoulder_bot_elbow_left" type="hinge" axis="0 -1 -1" range="-100 50"/>
-            <geom name="bottom_shoulder_bot_lower_arm_left" fromto=".01 -.01 .01 .17 -.17 .17" size=".031" type="capsule" material="red"/>
+            <geom name="bottom_shoulder_bot_lower_arm_left" fromto=".01 -.01 .01 .17 -.17 .17" size=".031" type="capsule"/>
             <body name="bottom_shoulder_bot_hand_left" pos=".18 -.18 .18">
-              <geom name="bottom_shoulder_bot_hand_left" type="sphere" size=".04" material="red"/>
+              <geom name="bottom_shoulder_bot_hand_left" type="sphere" size=".04"/>
             </body>
           </body>
         </body>
         
         <!-- Lower Body -->
         <body name="bottom_shoulder_bot_waist_lower" pos="-.01 0 -.26">
-          <geom name="bottom_shoulder_bot_waist_lower" fromto="0 -.06 0 0 .06 0" size=".06" type="capsule" material="red"/>
+          <geom name="bottom_shoulder_bot_waist_lower" fromto="0 -.06 0 0 .06 0" size=".06" type="capsule"/>
           <joint name="bottom_shoulder_bot_abdomen_z" pos="0 0 .065" axis="0 0 1" range="-45 45"/>
           <joint name="bottom_shoulder_bot_abdomen_y" pos="0 0 .065" axis="0 1 0" range="-75 30"/>
           <body name="bottom_shoulder_bot_pelvis" pos="0 0 -.165">
             <joint name="bottom_shoulder_bot_abdomen_x" pos="0 0 .1" axis="1 0 0" range="-35 35"/>
-            <geom name="bottom_shoulder_bot_butt" fromto="-.02 -.07 0 -.02 .07 0" size=".09" type="capsule" material="red"/>
+            <geom name="bottom_shoulder_bot_butt" fromto="-.02 -.07 0 -.02 .07 0" size=".09" type="capsule"/>
             
             <!-- Right Leg -->
             <body name="bottom_shoulder_bot_thigh_right" pos="0 -.1 -.04">
               <joint name="bottom_shoulder_bot_hip_x_right" type="hinge" axis="1 0 0" range="-30 10"/>
               <joint name="bottom_shoulder_bot_hip_z_right" type="hinge" axis="0 0 1" range="-60 35"/>
               <joint name="bottom_shoulder_bot_hip_y_right" type="hinge" axis="0 1 0" range="-150 20"/>
-              <geom name="bottom_shoulder_bot_thigh_right" fromto="0 0 0 0 .01 -.34" size=".06" type="capsule" material="red"/>
+              <geom name="bottom_shoulder_bot_thigh_right" fromto="0 0 0 0 .01 -.34" size=".06" type="capsule"/>
               <body name="bottom_shoulder_bot_shin_right" pos="0 .01 -.4">
                 <joint name="bottom_shoulder_bot_knee_right" type="hinge" axis="0 -1 0" range="-160 2"/>
-                <geom name="bottom_shoulder_bot_shin_right" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="red"/>
+                <geom name="bottom_shoulder_bot_shin_right" fromto="0 0 0 0 0 -.3" size=".049" type="capsule"/>
                 <body name="bottom_shoulder_bot_foot_right" pos="0 0 -.39">
                   <joint name="bottom_shoulder_bot_ankle_y_right" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
                   <joint name="bottom_shoulder_bot_ankle_x_right" type="hinge" pos="0 0 .04" axis="1 0 .5" range="-50 50"/>
-                  <geom name="bottom_shoulder_bot_foot1_right" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="red"/>
-                  <geom name="bottom_shoulder_bot_foot2_right" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="red"/>
+                  <geom name="bottom_shoulder_bot_foot1_right" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule"/>
+                  <geom name="bottom_shoulder_bot_foot2_right" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule"/>
                 </body>
               </body>
             </body>
@@ -96,15 +74,15 @@
               <joint name="bottom_shoulder_bot_hip_x_left" type="hinge" axis="-1 0 0" range="-30 10"/>
               <joint name="bottom_shoulder_bot_hip_z_left" type="hinge" axis="0 0 -1" range="-60 35"/>
               <joint name="bottom_shoulder_bot_hip_y_left" type="hinge" axis="0 1 0" range="-150 20"/>
-              <geom name="bottom_shoulder_bot_thigh_left" fromto="0 0 0 0 -.01 -.34" size=".06" type="capsule" material="red"/>
+              <geom name="bottom_shoulder_bot_thigh_left" fromto="0 0 0 0 -.01 -.34" size=".06" type="capsule"/>
               <body name="bottom_shoulder_bot_shin_left" pos="0 -.01 -.4">
                 <joint name="bottom_shoulder_bot_knee_left" type="hinge" axis="0 -1 0" range="-160 2"/>
-                <geom name="bottom_shoulder_bot_shin_left" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="red"/>
+                <geom name="bottom_shoulder_bot_shin_left" fromto="0 0 0 0 0 -.3" size=".049" type="capsule"/>
                 <body name="bottom_shoulder_bot_foot_left" pos="0 0 -.39">
                   <joint name="bottom_shoulder_bot_ankle_y_left" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
                   <joint name="bottom_shoulder_bot_ankle_x_left" type="hinge" pos="0 0 .04" axis="-1 0 -.5" range="-50 50"/>
-                  <geom name="bottom_shoulder_bot_foot1_left" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="red"/>
-                  <geom name="bottom_shoulder_bot_foot2_left" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="red"/>
+                  <geom name="bottom_shoulder_bot_foot1_left" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule"/>
+                  <geom name="bottom_shoulder_bot_foot2_left" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule"/>
                 </body>
               </body>
             </body>
@@ -113,30 +91,28 @@
       </body>
     </body>
 
-   
-
     <!-- top_shoulder_bot humanoid (Blue) - positioned centered above both base robots -->
     <body name="top_shoulder_bot" pos="0 0 2.4">
       <freejoint name="top_shoulder_bot_root"/>
       <body name="top_shoulder_bot_torso" pos="0 0 0.282">
-        <geom name="top_shoulder_bot_torso" fromto="0 -.07 0 0 .07 0" size=".07" type="capsule" material="blue"/>
-        <geom name="top_shoulder_bot_waist_upper" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" type="capsule" material="blue"/>
+        <geom name="top_shoulder_bot_torso" fromto="0 -.07 0 0 .07 0" size=".07" type="capsule"/>
+        <geom name="top_shoulder_bot_waist_upper" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" type="capsule"/>
         
         <!-- Head -->
         <body name="top_shoulder_bot_head" pos="0 0 .19">
-          <geom name="top_shoulder_bot_head" type="sphere" size=".09" material="blue"/>
+          <geom name="top_shoulder_bot_head" type="sphere" size=".09"/>
         </body>
         
         <!-- Arms -->
         <body name="top_shoulder_bot_upper_arm_right" pos="0 -.17 .06">
           <joint name="top_shoulder_bot_shoulder1_right" type="hinge" axis="2 1 1" range="-85 60"/>
           <joint name="top_shoulder_bot_shoulder2_right" type="hinge" axis="0 -1 1" range="-85 60"/>
-          <geom name="top_shoulder_bot_upper_arm_right" fromto="0 0 0 .16 -.16 -.16" size=".04" type="capsule" material="blue"/>
+          <geom name="top_shoulder_bot_upper_arm_right" fromto="0 0 0 .16 -.16 -.16" size=".04" type="capsule"/>
           <body name="top_shoulder_bot_lower_arm_right" pos=".18 -.18 -.18">
             <joint name="top_shoulder_bot_elbow_right" type="hinge" axis="0 -1 1" range="-100 50"/>
-            <geom name="top_shoulder_bot_lower_arm_right" fromto=".01 .01 .01 .17 .17 .17" size=".031" type="capsule" material="blue"/>
+            <geom name="top_shoulder_bot_lower_arm_right" fromto=".01 .01 .01 .17 .17 .17" size=".031" type="capsule"/>
             <body name="top_shoulder_bot_hand_right" pos=".18 .18 .18">
-              <geom name="top_shoulder_bot_hand_right" type="sphere" size=".04" material="blue"/>
+              <geom name="top_shoulder_bot_hand_right" type="sphere" size=".04"/>
             </body>
           </body>
         </body>
@@ -144,39 +120,39 @@
         <body name="top_shoulder_bot_upper_arm_left" pos="0 .17 .06">
           <joint name="top_shoulder_bot_shoulder1_left" type="hinge" axis="-2 1 -1" range="-85 60"/>
           <joint name="top_shoulder_bot_shoulder2_left" type="hinge" axis="0 -1 -1" range="-85 60"/>
-          <geom name="top_shoulder_bot_upper_arm_left" fromto="0 0 0 .16 .16 -.16" size=".04" type="capsule" material="blue"/>
+          <geom name="top_shoulder_bot_upper_arm_left" fromto="0 0 0 .16 .16 -.16" size=".04" type="capsule"/>
           <body name="top_shoulder_bot_lower_arm_left" pos=".18 .18 -.18">
             <joint name="top_shoulder_bot_elbow_left" type="hinge" axis="0 -1 -1" range="-100 50"/>
-            <geom name="top_shoulder_bot_lower_arm_left" fromto=".01 -.01 .01 .17 -.17 .17" size=".031" type="capsule" material="blue"/>
+            <geom name="top_shoulder_bot_lower_arm_left" fromto=".01 -.01 .01 .17 -.17 .17" size=".031" type="capsule"/>
             <body name="top_shoulder_bot_hand_left" pos=".18 -.18 .18">
-              <geom name="top_shoulder_bot_hand_left" type="sphere" size=".04" material="blue"/>
+              <geom name="top_shoulder_bot_hand_left" type="sphere" size=".04"/>
             </body>
           </body>
         </body>
         
         <!-- Lower Body -->
         <body name="top_shoulder_bot_waist_lower" pos="-.01 0 -.26">
-          <geom name="top_shoulder_bot_waist_lower" fromto="0 -.06 0 0 .06 0" size=".06" type="capsule" material="blue"/>
+          <geom name="top_shoulder_bot_waist_lower" fromto="0 -.06 0 0 .06 0" size=".06" type="capsule"/>
           <joint name="top_shoulder_bot_abdomen_z" pos="0 0 .065" axis="0 0 1" range="-45 45"/>
           <joint name="top_shoulder_bot_abdomen_y" pos="0 0 .065" axis="0 1 0" range="-75 30"/>
           <body name="top_shoulder_bot_pelvis" pos="0 0 -.165">
             <joint name="top_shoulder_bot_abdomen_x" pos="0 0 .1" axis="1 0 0" range="-35 35"/>
-            <geom name="top_shoulder_bot_butt" fromto="-.02 -.07 0 -.02 .07 0" size=".09" type="capsule" material="blue"/>
+            <geom name="top_shoulder_bot_butt" fromto="-.02 -.07 0 -.02 .07 0" size=".09" type="capsule"/>
             
             <!-- Right Leg -->
             <body name="top_shoulder_bot_thigh_right" pos="0 -.1 -.04">
               <joint name="top_shoulder_bot_hip_x_right" type="hinge" axis="1 0 0" range="-30 10"/>
               <joint name="top_shoulder_bot_hip_z_right" type="hinge" axis="0 0 1" range="-60 35"/>
               <joint name="top_shoulder_bot_hip_y_right" type="hinge" axis="0 1 0" range="-150 20"/>
-              <geom name="top_shoulder_bot_thigh_right" fromto="0 0 0 0 .01 -.34" size=".06" type="capsule" material="blue"/>
+              <geom name="top_shoulder_bot_thigh_right" fromto="0 0 0 0 .01 -.34" size=".06" type="capsule"/>
               <body name="top_shoulder_bot_shin_right" pos="0 .01 -.4">
                 <joint name="top_shoulder_bot_knee_right" type="hinge" axis="0 -1 0" range="-160 2"/>
-                <geom name="top_shoulder_bot_shin_right" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="blue"/>
+                <geom name="top_shoulder_bot_shin_right" fromto="0 0 0 0 0 -.3" size=".049" type="capsule"/>
                 <body name="top_shoulder_bot_foot_right" pos="0 0 -.39">
                   <joint name="top_shoulder_bot_ankle_y_right" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
                   <joint name="top_shoulder_bot_ankle_x_right" type="hinge" pos="0 0 .04" axis="1 0 .5" range="-50 50"/>
-                  <geom name="top_shoulder_bot_foot1_right" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="blue"/>
-                  <geom name="top_shoulder_bot_foot2_right" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="blue"/>
+                  <geom name="top_shoulder_bot_foot1_right" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule"/>
+                  <geom name="top_shoulder_bot_foot2_right" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule"/>
                 </body>
               </body>
             </body>
@@ -186,15 +162,15 @@
               <joint name="top_shoulder_bot_hip_x_left" type="hinge" axis="-1 0 0" range="-30 10"/>
               <joint name="top_shoulder_bot_hip_z_left" type="hinge" axis="0 0 -1" range="-60 35"/>
               <joint name="top_shoulder_bot_hip_y_left" type="hinge" axis="0 1 0" range="-150 20"/>
-              <geom name="top_shoulder_bot_thigh_left" fromto="0 0 0 0 -.01 -.34" size=".06" type="capsule" material="blue"/>
+              <geom name="top_shoulder_bot_thigh_left" fromto="0 0 0 0 -.01 -.34" size=".06" type="capsule"/>
               <body name="top_shoulder_bot_shin_left" pos="0 -.01 -.4">
                 <joint name="top_shoulder_bot_knee_left" type="hinge" axis="0 -1 0" range="-160 2"/>
-                <geom name="top_shoulder_bot_shin_left" fromto="0 0 0 0 0 -.3" size=".049" type="capsule" material="blue"/>
+                <geom name="top_shoulder_bot_shin_left" fromto="0 0 0 0 0 -.3" size=".049" type="capsule"/>
                 <body name="top_shoulder_bot_foot_left" pos="0 0 -.39">
                   <joint name="top_shoulder_bot_ankle_y_left" type="hinge" pos="0 0 .08" axis="0 1 0" range="-50 50"/>
                   <joint name="top_shoulder_bot_ankle_x_left" type="hinge" pos="0 0 .04" axis="-1 0 -.5" range="-50 50"/>
-                  <geom name="top_shoulder_bot_foot1_left" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule" material="blue"/>
-                  <geom name="top_shoulder_bot_foot2_left" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule" material="blue"/>
+                  <geom name="top_shoulder_bot_foot1_left" fromto="-.07 -.01 0 .14 -.03 0" size=".027" type="capsule"/>
+                  <geom name="top_shoulder_bot_foot2_left" fromto="-.07 .01 0 .14 .03 0" size=".027" type="capsule"/>
                 </body>
               </body>
             </body>

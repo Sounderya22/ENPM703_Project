@@ -1,0 +1,70 @@
+<mujoco model="HumanoidAndStackedScene">
+
+  <!-- ===== OPTIONS ===== -->
+  <option timestep="0.005"/>
+  <compiler autolimits="true"/>
+
+  <!-- ===== VISUALIZATION ===== -->
+  <visual>
+    <map force="0.1" zfar="30"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global offwidth="2560" offheight="1440" elevation="-20" azimuth="120"/>
+  </visual>
+
+  <!-- ===== ASSETS (merged, renamed duplicates) ===== -->
+  <asset>
+    <!-- Common textures -->
+    <texture type="skybox" builtin="gradient" rgb1=".3 .5 .7" rgb2="0 0 0" width="32" height="512"/>
+    <!-- renamed one of the grids to avoid conflict -->
+    <texture name="grid_main" type="2d" builtin="checker" width="512" height="512" rgb1=".1 .2 .3" rgb2=".2 .3 .4"/>
+    <material name="grid_main" texture="grid_main" texrepeat="1 1" texuniform="true" reflectance=".2"/>
+
+    <!-- Humanoid body materials -->
+    <texture name="body" type="cube" builtin="flat" mark="cross" width="128" height="128"
+             rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01"/>
+    <material name="body" texture="body" texuniform="true" rgba="0.8 0.6 .4 1"/>
+
+    <!-- Colors from 2_humanoids -->
+    <material name="red" rgba="0.8 0.3 0.3 1"/>
+    <material name="green" rgba="0.3 0.8 0.3 1"/>
+    <material name="blue" rgba="0.3 0.3 0.8 1"/>
+  </asset>
+
+  <!-- ===== DEFAULTS (from humanoid.xml) ===== -->
+  <default>
+    <motor ctrlrange="-1 1" ctrllimited="true"/>
+    <default class="body">
+      <geom type="capsule" condim="1" friction=".7" solimp=".9 .99 .003" solref=".015 1" material="body"/>
+      <joint type="hinge" damping=".2" stiffness="1" armature=".01" limited="true" solimplimit="0 .99 .01"/>
+    </default>
+  </default>
+
+  <!-- ===== WORLDBODY ===== -->
+  <worldbody>
+
+    <!-- Common ground -->
+    <geom name="ground" type="plane" size="50 50 0.1" material="grid_main" condim="3"/>
+
+    <!-- 1️⃣ DeepMind humanoid -->
+    <body name="humanoid_model" pos="-2 0 0">
+      <!-- Copy the <body> from humanoid.xml starting at torso -->
+      <body name="torso" pos="0 0 1.282" childclass="body">
+        <!-- paste entire humanoid <body> tree here -->
+      </body>
+    </body>
+
+    <!-- 2️⃣ Stacked humanoid tower -->
+    <body name="stacked_pair" pos="2 0 0">
+      <!-- Copy all <body> contents from 2_humanoids.xml worldbody here -->
+      <!-- For example: bottom_shoulder_bot and top_shoulder_bot -->
+    </body>
+
+  </worldbody>
+
+  <!-- ===== ACTUATORS ===== -->
+  <actuator>
+    <!-- You can merge both actuator lists here -->
+  </actuator>
+
+</mujoco>
+

@@ -156,7 +156,9 @@ def custom_controller(data, time):
 
 def main():
     # Path to your XML file
-    xml_path = "models/humanoid_pyramid.xml"
+    # xml_path = "models/humanoid_pyramid.xml"
+    xml_path = "new_models/100_humanoids_exact.xml"
+
     
     # Create simulator instance
     simulator = MuJoCoSimulator(xml_path)

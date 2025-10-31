@@ -1,0 +1,27 @@
+Wed Oct 29 21:44:40 2025
+ERROR: could not create window
+
+Wed Oct 29 23:35:44 2025
+ERROR: could not create window
+
+Wed Oct 29 23:42:06 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 5073. The simulation is unstable. Time = 0.1150.
+
+Wed Oct 29 23:52:58 2025
+WARNING: Insufficient arena memory for the number of constraints generated. Increase arena memory allocation above 100M bytes. Time = 0.0000.
+
+Wed Oct 29 23:57:46 2025
+ERROR: could not create window
+
+Wed Oct 29 23:58:41 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 108. The simulation is unstable. Time = 10.5150.
+
+Thu Oct 30 11:26:51 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 108. The simulation is unstable. Time = 8.2400.
+
+Thu Oct 30 15:45:29 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 112. The simulation is unstable. Time = 22.4200.
+
+Thu Oct 30 15:49:58 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 270. The simulation is unstable. Time = 20.4150.
+
