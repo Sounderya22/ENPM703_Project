@@ -6,24 +6,35 @@ services:
       context: ./
       dockerfile: Dockerfile
     image: marl:latest
-    container_name: marl_container
+    container_name: marl-container
     tty: true
     environment:
-      # X11 / graphics
-      - DISPLAY=${DISPLAY}
-      - MUJOCO_PATH=/home/ubuntu/.mujoco/mujoco-2.3.7
-      - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MUJOCO_PATH/bin
-      - MJLIB_PATH=$MUJOCO_PATH/bin/libmujoco.so
-      - MUJOCO_GL=glfw
-      - __NV_PRIME_RENDER_OFFLOAD=1
-      - __GLX_VENDOR_LIBRARY_NAME=nvidia
-      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+      DISPLAY: ${DISPLAY}
+      MUJOCO_PATH: /root/.mujoco/mujoco-3.3.7
+      LD_LIBRARY_PATH: /usr/local/cuda/lib64:${LD_LIBRARY_PATH}
+      MJLIB_PATH: /root/.mujoco/mujoco-3.3.7/lib/libmujoco.so
+      MUJOCO_GL: glfw
+      NV_PRIME_RENDER_OFFLOAD: 1
+      GLX_VENDOR_LIBRARY_NAME: nvidia
+      XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility,graphics,video
+      CUDA_HOME: /usr/local/cuda
+      XAUTHORITY: /tmp/.docker.xauth
+      QT_X11_NO_MITSHM: 1
+      LIBGL_ALWAYS_INDIRECT: 0
+      LIBGL_ALWAYS_SOFTWARE: 0
+      MESA_GL_VERSION_OVERRIDE: 4.6
+      MESA_GLSL_VERSION_OVERRIDE: 460
+      MUJOCO_RENDERER: egl
     volumes:
+      - /dev/dri:/dev/dri
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ..:/home/ubuntu/marl_workspace:cached
+      - ..:/home/ubuntu/marl/workspace:cached
     network_mode: host
     runtime: nvidia
-    privileged: true
+    privileged: false
     deploy:
       resources:
         reservations:
