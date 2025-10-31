@@ -438,7 +438,7 @@
   </contact>
 
   <actuator>
-    <actuator>
+    
   <!-- Humanoid 1 Actuators -->
   <motor name="abdomen_z1" joint="abdomen_z1" gear="20"/>
   <motor name="abdomen_y1" joint="abdomen_y1" gear="50"/>
@@ -530,6 +530,5 @@
   <motor name="shoulder1_left4" joint="shoulder1_left4" gear="40"/>
   <motor name="shoulder2_left4" joint="shoulder2_left4" gear="40"/>
   <motor name="elbow_left4" joint="elbow_left4" gear="30"/>
-</actuator>
   </actuator>
 </mujoco>
