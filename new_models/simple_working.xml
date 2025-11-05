@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<mujoco model="Simple Working Scene">
+  <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+  <option timestep="0.005" integrator="RK4"/>
+  
+  <worldbody>
+    <light name="toplight" pos="0 0 5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" type="plane" size="0 0 0.05" pos="0 0 0" rgba="0.8 0.9 0.8 1"/>
+    
+    <!-- Humanoid 1 -->
+    <body name="humanoid1" pos="-2 0 1.0">
+      <include file="humanoid.xml"/>
+    </body>
+    
+    <!-- Humanoid 2 -->
+    <body name="humanoid2" pos="0 0 1.0">
+      <include file="humanoid.xml"/>
+    </body>
+    
+    <!-- Double Humanoids -->
+    <body name="double1" pos="2 0 1.0">
+      <include file="2_humanoids_minimal.xml"/>
+    </body>
+  </worldbody>
+</mujoco>

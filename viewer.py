@@ -42,7 +42,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         xml_file = sys.argv[1]
     else:
-        xml_file = "new_models/100_humanoids_exact.xml"
+        xml_file = "new_models/custom_combined.xml"
     
     success = test_mujoco_file(xml_file)
     
